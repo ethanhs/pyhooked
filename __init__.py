@@ -52,6 +52,12 @@ class hook:
 		#append to current_keys when down
 		if str(e.event_type)=="key down" and not (key in self.current_keys):
 			self.current_keys.append(key)
+			for id in self.IDs:
+				if self.current_keys==id[1] or self.current_keys in id[1]:
+					ind=id[1].index(self.current_keys)
+					if not func_called:
+						id[2][ind]()
+					func_called=True
 		#remove when released
 		elif str(e.event_type)=="key up":
 			try:
@@ -60,12 +66,7 @@ class hook:
 				pass
 		else:
 			pass
-		for id in self.IDs:
-			if self.current_keys==id[1] or self.current_keys in id[1]:
-				ind=id[1].index(self.current_keys)
-				if not func_called:
-					id[2][ind]()
-				func_called=True
+		
 	def Hotkey(self,list=[],fhot=None):
 		"""Adds a new hotkey. Definition: Hotkey(list=[],fhot=None) where list is the list of
 		keys and fhot is the callback function"""
