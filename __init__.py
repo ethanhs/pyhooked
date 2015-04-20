@@ -64,8 +64,6 @@ class hook:
 				self.current_keys.remove(key)
 			except:
 				pass
-		else:
-			pass
 		
 	def Hotkey(self,list=[],fhot=None):
 		"""Adds a new hotkey. Definition: Hotkey(list=[],fhot=None) where list is the list of
@@ -78,8 +76,28 @@ class hook:
 			raise Exception("Error: Empty key list or no callback function")
 		else:
 			self.handlers.append(self.print_event)
-	def RemHotKey(self,*args):
-		pass
+			return (self.oldID-1)
+	def RemHotKey(self,hkey):
+		"""Remove a hotkey. Specify the id, the key list, or the function to remove the hotkey."""
+		print hkey, self.IDs
+		'''if str(type(hkey))=="<type 'int'>":
+			print "__int__"
+			for hk in self.IDs:
+				for id in hk[0]:
+					if hk==hkey:
+						self.IDs.remove(hk)
+		elif str(type(hkey))=="<type 'list'>":
+			print "__list__"
+			for hk in self.IDs:
+				if hk[1]==hkey:
+					self.IDs.remove(hk)
+		elif str(type(hkey))=="<type 'function'>":
+			print "__func__"
+			for hk in self.IDs:
+				print hk[2]
+				if hk[2]==hkey:
+					print "found"
+					self.IDs.remove(hk)'''
 	def listener(self):
 		"""The listener listens to events and adds them to handlers"""
 		from ctypes import windll, CFUNCTYPE, POINTER, c_int, c_void_p, byref
@@ -125,4 +143,5 @@ if __name__ == '__main__':
 	hk=hook()
 	hk.Hotkey(["LCtrl","A"],foo)
 	hk.Hotkey(["LCtrl","B"],foobar)
+	hk.RemHotKey(foobar)
 	hk.listen()
