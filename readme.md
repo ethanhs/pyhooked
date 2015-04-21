@@ -26,6 +26,7 @@ If you want to use this in a commercial product, or not under the GPL, contact m
 
 ####The Future - 
 Here are a few things that I will be adding (subject to change without notice):
+* add support for args for called functions
 * get mouse inputs
 * PyPy, Jython support
 * Threads?
