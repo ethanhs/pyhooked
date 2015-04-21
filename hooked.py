@@ -1,7 +1,7 @@
 import ctypes
 from ctypes import wintypes
 from collections import namedtuple
-import thread
+
 __version__="0.0.5"
 KeyEvents=namedtuple("KeyEvents",(['event_type', 'key_code',
 											 'scan_code', 'alt_pressed',
