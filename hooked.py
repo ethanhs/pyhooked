@@ -1,7 +1,7 @@
 import ctypes
 from ctypes import wintypes
 from collections import namedtuple
-
+import platform
 __version__="0.0.6"
 KeyEvents=namedtuple("KeyEvents",(['event_type', 'key_code',
 											 'scan_code', 'alt_pressed',
@@ -11,7 +11,6 @@ MouseEvents=namedtuple("MouseEvents",(['event_type','mouse_x','mouse_y']))
 class hook:
 	"""Main class to create and track hotkeys. Use hook.Hotkey to make a new hotkey"""
 	def __init__(self):
-		self.args=()
 		self.fhot=[]
 		self.list=[]
 		self.handlers=[]
@@ -22,22 +21,40 @@ class hook:
 		self.keylist=["Null","Esc","1","2","3","4","5","6","7","8","9","0","-","=","Backspace","Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","Return","LCtrl","A","S","D","F","G","H","J","K","L",";","'","`","LShift","\\","Z","X","C","V","B","N","M",",",".","/","RShift","Key*","LAlt","Space","Capslock","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","Numlock","ScrollLock","KeyHome","Up","KeyPgUp","Key-","Left","Key5","Right","Key+","End","Down","KeyPgDn","KeyIns","KeyDel","SYSRQ","","","F11","F12","","","LWin","RWin","MenuKey","RAlt","RCtrl"]
 	def print_event(self,e):
 		"""This parses through the keyboard events. You shouldn't ever need this. Actually, don't mess with this; you may break your computer."""
-		if "scan_code" in str(e):
-			self.estr=str(e)
-			start=self.estr.index("scan_code=")
-			end=self.estr.index(",",start)
-			scancode=int(str(e)[(start+10):end])
-			start2=self.estr.index("key_code=")
-			end2=self.estr.index(",",start2)
-			try:
-				keycode=int(str(e)[(start2+10):end2])
-			except:
-				keycode=0
-			try:
-				key=self.keylist[scancode]
-			except:
-				key=str(e)
-		elif str(e.event_type)=="move":
+		if platform.python_implementation()=="PyPy":
+			if "scan_code" in str(e):
+				self.estr=str(e)
+				start=self.estr.index("scan_code=")
+				#PyPy seems to append an 'L' so search until that
+				end=self.estr.index("L",start)
+				scancode=int(str(e)[(start+10):end])
+				start2=self.estr.index("key_code=")
+				end2=self.estr.index("L",start2)
+				try:
+					keycode=int(str(e)[(start2+10):end2])
+				except:
+					keycode=0
+				try:
+					key=self.keylist[scancode]
+				except:
+					key=str(e)
+		elif platform.python_implementation()=="CPython" or platform.python_implementation()=="IronPython":
+			if "scan_code" in str(e):
+				self.estr=str(e)
+				start=self.estr.index("scan_code=")
+				end=self.estr.index(",",start)
+				scancode=int(str(e)[(start+10):end])
+				start2=self.estr.index("key_code=")
+				end2=self.estr.index(",",start2)
+				try:
+					keycode=int(str(e)[(start2+10):end2])
+				except:
+					keycode=0
+				try:
+					key=self.keylist[scancode]
+				except:
+					key=str(e)
+		if str(e.event_type)=="move":
 			key=[e.mouse_x,e.mouse_y]
 		elif not ("scan_code" in str(e)):
 			if e.event_type[0]=="l":
@@ -66,8 +83,8 @@ class hook:
 			for id in self.IDs:
 				#This next bit is complex. Basically it checks all the hotkeys provided to see if they are in self.current_keys
 				if all([(i in self.current_keys) for i in id[1]]):
-					if self.args!=():
-						id[2](self.args)
+					if len(id)==4:
+						id[2](id[3])
 					else:
 						id[2]()
 		#remove key when released
@@ -86,8 +103,8 @@ class hook:
 			for id in self.IDs:
 				#This next bit is complex. Basically it checks all the hotkeys provided to see if they are in self.current_keys
 				if all([(i in self.current_keys) for i in id[1]]):
-					if self.args!=():
-						id[2](self.args)
+					if len(id)==4:
+						id[2](id[3])
 					else:
 						id[2]()
 		else:
@@ -96,11 +113,12 @@ class hook:
 		"""Adds a new hotkey. Definition: Hotkey(list=[],fhot=None) where list is the list of
 		keys and fhot is the callback function"""
 		if not (args is None):
-			self.args=args
-		self.IDs.append([self.oldID,list,fhot])
+			self.IDs.append([self.oldID,list,fhot,args])
+		else:
+			self.IDs.append([self.oldID,list,fhot])
 		self.oldID+=1
 		if self.list is [] or self.fhot is None:
-			raise Exception("Error: Empty key list or no callback function")
+			raise Exception("Error: Empty key list or no callback function.")
 		elif len(self.IDs)==1:
 			self.handlers.append(self.print_event)
 			return (self.oldID-1)
@@ -182,8 +200,7 @@ def foobar():
 	"""For the example, it prints 'foobar'."""
 	print "foobar"
 def exiter():
-	import sys
-	sys.exit()
+	raise SystemExit
 if __name__ == '__main__':
 	hk=hook()
 	hk.Hotkey(["LCtrl","A"],foo,args=("HI")) # hotkey 0
