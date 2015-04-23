@@ -13,6 +13,7 @@ hk=hook() #make a new instance of hooked
 hk.Hotkey(["LCtrl","A"],foo) #add a new shortcut ctrl+a, that calls foo() when pressed
 hk.listen() #start listening for key presses
 </pre>
+Read more in the [wiki](https://github.com/IronManMark20/hooked/wiki)!
 ####Alternatives -
 [pyHook](http://sourceforge.net/projects/pyhook/) and [pyhk](https://github.com/schurpf/pyhk) inspired the creation of this project. They are great hotkey modules too!
 ####Extra - 
