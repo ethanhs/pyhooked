@@ -108,7 +108,7 @@ class hook:
 					else:
 						id[2]()
 		else:
-			print e
+			print(e)
 	def Hotkey(self,list=[],fhot=None,args=None):
 		"""Adds a new hotkey. Definition: Hotkey(list=[],fhot=None) where list is the list of
 		keys and fhot is the callback function"""
@@ -195,10 +195,10 @@ class hook:
 		self.listener()
 def foo(*args):
 	"""For the example, it prints 'foo'."""
-	print "foo", args
+	print("foo", args)
 def foobar():
 	"""For the example, it prints 'foobar'."""
-	print "foobar"
+	print("foobar")
 def exiter():
 	raise SystemExit
 if __name__ == '__main__':
