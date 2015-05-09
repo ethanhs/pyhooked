@@ -2,7 +2,7 @@
 ####About - 
 Hooked is a pure python keyboard hotkey that allows the creation of hotkeys in all Python implementations that support ctypes. Instead of messing around with low level windows calls, just tell Hooked what your hotkey is and what function you want to call.
 
-Hooked supports IronPython (2.7) and CPython (Tested:2.7,3.4 Most are likely to work) currently. It is pure Python, so porting should be very simple (see The Future below).
+Hooked supports IronPython (2.7), PyPy (newest repo version) and CPython (Tested:2.7,3.4 Most are likely to work) currently. It is pure Python, so porting should be very simple (see The Future below).
 
 ####Usage - 
 It is really easy, just:
