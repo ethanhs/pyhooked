@@ -26,6 +26,8 @@ This is free software, and you are welcome to redistribute it
 under certain conditions;
 Hooked is licensed under the GPL v2, or at your choice, any later version. This program comes with the gpl in a .txt file.
 
+#####New: You can use it under the LGPL too. The license choice is entirely up to you.
+
 ####Alternative licensing - 
 If you want to use this in a commercial product, or not under the GPL, contact me and I will consider allowing licensing under a different license.
 
