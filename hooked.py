@@ -18,7 +18,7 @@ class hook:
 		self.oldID=0
 		self.current_keys=[]
 		#Scancodes and a few key codes
-		self.keylist=["Null","Esc","1","2","3","4","5","6","7","8","9","0","-","=","Backspace","Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","Return","LCtrl","A","S","D","F","G","H","J","K","L",";","'","`","LShift","\\","Z","X","C","V","B","N","M",",",".","/","RShift","Key*","LAlt","Space","Capslock","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","Numlock","ScrollLock","KeyHome","Up","KeyPgUp","Key-","Left","Key5","Right","Key+","End","Down","KeyPgDn","KeyIns","KeyDel","SYSRQ","","","F11","F12","","","LWin","RWin","MenuKey","RAlt","RCtrl"]
+		self.keylist=["Null","Esc","1","2","3","4","5","6","7","8","9","0","-","=","Backspace","Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","Return","LCtrl","A","S","D","F","G","H","J","K","L",";","'","`","LShift","\\","Z","X","C","V","B","N","M",",",".","/","RShift","Key*","LAlt","Space","Capslock","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","Numlock","ScrollLock","KeyHome","Up","KeyPgUp","Key-","Left","Key5","Right","Key+","End","Down","KeyPgDn","KeyIns","KeyDel","SYSRQ","","","F11","F12","","","LWin","RWin","MenuKey","RAlt","RCtrl","PrtSc"]
 	def print_event(self,e):
 		"""This parses through the keyboard events. You shouldn't ever need this. Actually, don't mess with this; you may break your computer."""
 		if platform.python_implementation()=="PyPy":
@@ -31,7 +31,7 @@ class hook:
 				start2=self.estr.index("key_code=")
 				end2=self.estr.index("L",start2)
 				try:
-					keycode=int(str(e)[(start2+10):end2])
+					keycode=int(str(e)[(start2+9):end2])
 				except:
 					keycode=0
 				try:
@@ -47,7 +47,7 @@ class hook:
 				start2=self.estr.index("key_code=")
 				end2=self.estr.index(",",start2)
 				try:
-					keycode=int(str(e)[(start2+10):end2])
+					keycode=int(str(e)[(start2+9):end2])
 				except:
 					keycode=0
 				try:
@@ -77,6 +77,10 @@ class hook:
 				key=self.keylist[29]
 			elif keycode==63:
 				key=self.keylist[95]
+		#Workaround for PrtSc
+		if key == "Key*":
+			if keycode == 44:
+				key = self.keylist[96]
 		#append to current_keys when down
 		if str(e.event_type)=="key down" or str(e.event_type)=="left down" or str(e.event_type)=="right down" or "wheel" in str(e.event_type):
 			self.current_keys.append(key)
