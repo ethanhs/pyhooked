@@ -35,6 +35,7 @@ If you want to use this in a commercial product, or not under the GPL, contact m
 Here are a few things that I will be adding (subject to change without notice):
 * add support for args for called functions
 * get mouse inputs
+* support all scancodes found [here](https://msdn.microsoft.com/en-us/library/aa299374%28v=vs.60%29.aspx)
 * Jython support
 * Threads?
 * ????<br>
