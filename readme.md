@@ -1,6 +1,6 @@
 #Hooked: a pure Python hotkey module
 ####About - 
-Hooked is a pure python keyboard hotkey that allows the creation of hotkeys in all Python implementations that support ctypes. Instead of messing around with low level windows calls, just tell Hooked what your hotkey is and what function you want to call.
+Hooked is a pure python keyboard hotkey that allows the creation of hotkeys in all Python implementations that support ctypes. Instead of messing around with low level Windows calls, just tell Hooked what your hotkey is and what function you want to call.
 
 Hooked supports IronPython (2.7), PyPy (newest repo version) and CPython (Tested:2.7,3.4 Most are likely to work) currently. It is pure Python, so porting should be very simple (see The Future below).
 
@@ -15,6 +15,11 @@ hk.Hotkey(["LCtrl","A"],foo) #add a new shortcut ctrl+a, that calls foo() when p
 hk.listen() #start listening for key presses
 </pre>
 Read more in the [wiki](https://github.com/IronManMark20/hooked/wiki)!
+####Installing
+
+Just run `$ pip install pyhooked`
+
+
 ####Alternatives -
 [pyHook](http://sourceforge.net/projects/pyhook/) and [pyhk](https://github.com/schurpf/pyhk) inspired the creation of this project. They are great hotkey modules too!
 ####Extra - 
