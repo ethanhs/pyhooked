@@ -1,5 +1,7 @@
 #PyHooked: a pure Python hotkey module
 ####About - 
+
+[![Join the chat at https://gitter.im/IronManMark20/pyhooked](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/IronManMark20/pyhooked?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 PyHooked is a pure python keyboard hotkey that allows the creation of hotkeys in all Python implementations that support ctypes. Instead of messing around with low level Windows calls, just tell Hooked what your hotkey is and what function you want to call.
 
 PyHooked supports IronPython (2.7), PyPy (newest repo version) and CPython (Tested:2.7,3.4 Most are likely to work) currently. It is pure Python, so porting should be very simple (see The Future below).
