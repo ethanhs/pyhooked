@@ -36,11 +36,11 @@ PyHooked is licensed under the LGPL v3, or at your choice, any later version. Th
 #####As of v0.6, the module is LGPL licensed, not under the GPL.
 
 ####The Future - 
-Here are a few things that I will be adding (subject to change without notice):
+Here are a few things that I would like to see:
 * add support for args for called functions
 * get mouse inputs
 * support all scancodes found [here](https://msdn.microsoft.com/en-us/library/aa299374%28v=vs.60%29.aspx)
 * Jython support
 * Threads?
 * ????<br>
-I am open to feature requests. If you have ideas, let me know (mr.smittye(at)gmail.com). Or, even better, make your changes and a pull request!
+I am open to feature requests. If you have ideas, let me know (ironmanmark20 (at) outlook.com). Or, even better, make your changes and a pull request!
