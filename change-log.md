@@ -15,3 +15,7 @@
 
 #####v0.7:
 * release to PyPi
+
+#####v1.0:
+* major overhaul of code to optimize and improve code quality and efficiency (expect a v1.1)
+* may have breaking changes
