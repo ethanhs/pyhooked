@@ -359,7 +359,7 @@ class Hook(object):
                     event = KeyboardEvent(current_key, event_type, self.pressed_keys, key_code)
 
                     # if we have an event handler, call it to deal with keys in the list
-                    if not self.handler:
+                    if self.handler:
                         self.handler(event)
 
                 finally:
@@ -383,7 +383,7 @@ class Hook(object):
                         # the first two members of kb_data_ptr hold the mouse position, x and y
                         event = MouseEvent(current_key, event_type, kb_data_ptr[0], kb_data_ptr[1])
 
-                        if not self.handler:
+                        if self.handler:
                             self.handler(event)
 
                 finally:
