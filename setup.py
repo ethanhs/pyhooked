@@ -7,7 +7,7 @@ with open('readme.md') as f:
 setup(
     name='pyhooked',
     packages=['pyhooked'],
-    version='1.0.0',
+    version='0.8.0',
     description='Pure Python hotkey hook, with thanks to pyHook and pyhk',
     long_description=long_desc,
     author='Ethan Smith',
