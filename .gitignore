@@ -1,0 +1,4 @@
+#pycharm
+.idea/
+#cached files
+pyhooked/__pycache__/*.*
