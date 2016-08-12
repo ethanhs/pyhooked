@@ -8,7 +8,6 @@ from ctypes import wintypes
 from ctypes import CFUNCTYPE, POINTER, c_int, c_uint, c_void_p
 from ctypes import byref
 import atexit
-import platform
 
 __version__ = '0.8.0'
 
