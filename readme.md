@@ -5,9 +5,9 @@
 
 
 ####About - 
-PyHooked is a pure python keyboard hotkey that allows the creation of hotkeys in all Python implementations that support ctypes. Instead of messing around with low level Windows calls, just tell Hooked what your hotkey is and what function you want to call.
+PyHooked is a pure python keyboard and mouse hotkey module that allows the creation of hotkeys in all Python implementations that support sane implementations of ctypes. Instead of messing around with low level Windows calls, just give Hooked a callback and tell it to start listening.
 
-PyHooked supports IronPython (2.7.5+, incl. 2.7.6 RC2), PyPy (5.3.1) and CPython (Tested:2.7 x86,3.4 x64,3.5 x86; Most are likely to work) currently. It is pure Python, so porting should be very simple.
+PyHooked supports IronPython (2.7.5+, incl. 2.7.6 RC2), PyPy (5.3.1+) and CPython (Tested:2.7 x86,3.4 x64,3.5 x86; Most are likely to work) currently. It is pure Python, so porting to other Python implementations and versions should be very simple.
 
 ####Usage - 
 Please see [example.py](https://github.com/ethanhs/pyhooked/blob/master/example.py) for a basic example.
