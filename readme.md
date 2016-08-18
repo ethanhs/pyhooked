@@ -12,7 +12,7 @@ PyHooked supports IronPython (2.7.5+, incl. 2.7.6 RC2), PyPy (5.3.1+) and CPytho
 ####Usage - 
 Please see [example.py](https://github.com/ethanhs/pyhooked/blob/master/example.py) for a basic example.
 
-I you are using it with a UI library, please see [example_gui.py](https://github.com/ethanhs/pyhooked/blob/master/example_gui.py)
+If you are using it with a UI library, please see [example_gui.py](https://github.com/ethanhs/pyhooked/blob/master/example_gui.py)
 
 Please note that the wiki is out of date, and needs to be updated.
 
