@@ -235,7 +235,8 @@ class Hook(object):
                     event_type = event_types[0xFFFFFFFF & event_code]
 
                     if event_type == 'key down':  # add key to those down to list
-                        self.pressed_keys.append(current_key)
+                        if current_key not in self.pressed_keys:
+                            self.pressed_keys.append(current_key)
 
                     if event_type == 'key up':  # remove when no longer pressed
                         self.pressed_keys.remove(current_key)
