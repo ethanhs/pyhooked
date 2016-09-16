@@ -1,19 +1,14 @@
-from distutils.core import setup
-
-long_desc = None
-with open('readme.md') as f:
-    long_desc = f.read()
+from setuptools import setup
 
 setup(
     name='pyhooked',
     packages=['pyhooked'],
-    version='0.8.0',
-    description='Pure Python hotkey hook, with thanks to pyHook and pyhk',
-    long_description=long_desc,
+    version='0.8.1',
+    description='Pure Python hotkey hook, with thanks to pyHook, pywinauto, and pyhk',
     author='Ethan Smith',
-    author_email='mr.smittye@gmail.com',
+    author_email='ethan@ethanhs.me',
     url='https://github.com/ethanhs/hooked',
-    download_url="https://github.com/ethanhs/pyhooked/archive/master.zip",
+    download_url="https://github.com/ethanhs/pyhooked/tarball/0.8.1",
     keywords=['hotkey', 'shortcut', 'windows', 'keyboard', 'hooks', 'hook'],
     classifiers=[],
 )

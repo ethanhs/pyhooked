@@ -9,7 +9,7 @@ from ctypes import CFUNCTYPE, POINTER, c_int, c_uint, c_void_p
 from ctypes import byref
 import atexit
 
-__version__ = '0.8.0'
+__version__ = '0.8.1'
 
 cmp_func = CFUNCTYPE(c_int, c_int, wintypes.HINSTANCE, POINTER(c_void_p))
 
