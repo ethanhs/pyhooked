@@ -37,11 +37,11 @@ def _callback_pointer(handler):
     return cmp_func(handler)
 
 
-class Event(object):
+class BaseEvent(object):
     """A keyboard or mouse event."""
     pass
 
-class KeyboardEvent(Event):
+class KeyboardEvent(BaseEvent):
     """Class to describe an event triggered by the keyboard"""
 
     def __init__(self, current_key=None, event_type=None, pressed_key=None, key_code=None):
@@ -51,7 +51,7 @@ class KeyboardEvent(Event):
         self.key_code = key_code
 
 
-class MouseEvent(Event):
+class MouseEvent(BaseEvent):
     """Class to describe an event triggered by the mouse"""
 
     def __init__(self, current_key=None, event_type=None, mouse_x=None, mouse_y=None):
