@@ -6,6 +6,9 @@ def handle_events(args):
         print(args.key_code)
         if args.current_key == 'A' and args.event_type == 'key down' and 'Lcontrol' in args.pressed_key:
             print("Ctrl + A was pressed")
+        elif args.current_key == 'Q' and args.event_type == 'key down' and 'Lcontrol' in args.pressed_key:
+            hk.stop()
+            print('Quitting.')
 
     if isinstance(args, MouseEvent):
         if args.mouse_x == 300 and args.mouse_y == 400:
