@@ -185,6 +185,7 @@ ID_TO_KEY = {8: 'Back',
              220: 'Oem_5',
              221: 'Oem_6',
              222: 'Oem_7',
+             223: 'OEM_8',
              1001: 'mouse left',  # mouse hotkeys
              1002: 'mouse right',
              1003: 'mouse middle',
