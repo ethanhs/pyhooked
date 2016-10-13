@@ -7,6 +7,7 @@ import ctypes
 from ctypes import wintypes
 from ctypes import CFUNCTYPE, POINTER, c_int, c_uint, c_void_p, windll
 from ctypes import byref
+from warnings import warn
 import atexit
 
 __version__ = '0.8.1'
@@ -185,7 +186,7 @@ ID_TO_KEY = {8: 'Back',
              220: 'Oem_5',
              221: 'Oem_6',
              222: 'Oem_7',
-             223: 'OEM_8',
+             #223: 'OEM_8',
              1001: 'mouse left',  # mouse hotkeys
              1002: 'mouse right',
              1003: 'mouse middle',
@@ -213,8 +214,9 @@ WM_QUIT = 0x0012
 class Hook(object):
     """Main hotkey class used to and listen for hotkeys. Set an event handler to check what keys are pressed."""
 
-    def __init__(self):
-        """Initializer of the Hook class, creates class attributes"""
+    def __init__(self, warn_unrecognised = True):
+        """Initializer of the Hook class, creates class attributes. If warn_unrecognised is True, warn when an unrecognised key is pressed."""
+        self.warn_unrecognised = warn_unrecognised
         self.pressed_keys = []
         self.keyboard_id = None
         self.mouse_id = None
@@ -242,25 +244,29 @@ class Hook(object):
             def keyboard_low_level_handler(code, event_code, kb_data_ptr):
                 """Used to catch keyboard events and deal with the event"""
                 key_code = 0xFFFFFFFF & kb_data_ptr[0]  # key code
-                current_key = ID_TO_KEY[key_code]
-                event_type = event_types[0xFFFFFFFF & event_code]
+                current_key = ID_TO_KEY.get(key_code) # check the type of event (see ID_TO_KEY for a list)
+                if current_key is None:
+                    if self.warn_unrecognised:
+                        warn('Unrecognised key ID %d.' % key_code)
+                else:
+                    event_type = event_types[0xFFFFFFFF & event_code]
 
-                if event_type == 'key down':  # add key to those down to list
-                    if current_key not in self.pressed_keys:
-                        self.pressed_keys.append(current_key)
+                    if event_type == 'key down':  # add key to those down to list
+                        if current_key not in self.pressed_keys:
+                            self.pressed_keys.append(current_key)
 
-                if event_type == 'key up':  # remove when no longer pressed
-                    try:
-                        self.pressed_keys.remove(current_key)
-                    except ValueError:
-                        pass # current_key is not in the list.
+                    if event_type == 'key up':  # remove when no longer pressed
+                        try:
+                            self.pressed_keys.remove(current_key)
+                        except ValueError:
+                            pass # current_key is not in the list.
 
-                # wrap the keyboard information grabbed into a container class
-                event = KeyboardEvent(current_key, event_type, self.pressed_keys, key_code)
+                    # wrap the keyboard information grabbed into a container class
+                    event = KeyboardEvent(current_key, event_type, self.pressed_keys, key_code)
 
-                # if we have an event handler, call it to deal with keys in the list
-                if self.handler:
-                    self.handler(event)
+                    # if we have an event handler, call it to deal with keys in the list
+                    if self.handler:
+                        self.handler(event)
 
                 # TODO: fix return here to use non-blocking call
                 return CallNextHookEx(self.keyboard_id, code, event_code, kb_data_ptr)
@@ -274,14 +280,18 @@ class Hook(object):
         if self.mouse_is_hook:
             def mouse_low_level_handler(code, event_code, kb_data_ptr):
                 """Used to catch and deal with mouse events"""
-                current_key = MOUSE_ID_TO_KEY[event_code]  # check the type of event (see MOUSE_ID_TO_KEY for a list)
-                if current_key != 'Move':  # if we aren't moving, then we deal with a mouse click
-                    event_type = MOUSE_ID_TO_EVENT_TYPE[event_code]
-                    # the first two members of kb_data_ptr hold the mouse position, x and y
-                    event = MouseEvent(current_key, event_type, kb_data_ptr[0], kb_data_ptr[1])
+                current_key = MOUSE_ID_TO_KEY.get(event_code)  # check the type of event (see MOUSE_ID_TO_KEY for a list)
+                if current_key is None:
+                    if self.warn_unrecognised:
+                        warn('Unrecognised mouse ID %d.' % event_code)
+                else:
+                    if current_key != 'Move':  # if we aren't moving, then we deal with a mouse click
+                        event_type = MOUSE_ID_TO_EVENT_TYPE[event_code]
+                        # the first two members of kb_data_ptr hold the mouse position, x and y
+                        event = MouseEvent(current_key, event_type, kb_data_ptr[0], kb_data_ptr[1])
 
-                    if self.handler:
-                        self.handler(event)
+                        if self.handler:
+                            self.handler(event)
 
                 # TODO: fix return here to use non-blocking call
                 return CallNextHookEx(self.mouse_id, code, event_code, kb_data_ptr)
