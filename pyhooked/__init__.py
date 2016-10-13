@@ -228,7 +228,7 @@ class Hook(object):
         raise NotImplementedError()
     
     def stop(self):
-        """Stopp this object from listening."""
+        """Stop this object from listening."""
         windll.user32.PostQuitMessage (0)
     
     def hook(self, keyboard=True, mouse=False):
