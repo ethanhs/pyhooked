@@ -214,13 +214,16 @@ class Hook(object):
 
     def __init__(self):
         """Initializer of the Hook class, creates class attributes"""
-        self.handler = None
         self.pressed_keys = []
         self.keyboard_id = None
         self.mouse_id = None
         self.mouse_is_hook = False
         self.keyboard_is_hook = True
 
+    def handler(self, event):
+        """Handle keyboard and mouse events."""
+        raise NotImplementedError()
+    
     def stop(self):
         """Stopp this object from listening."""
         windll.user32.PostQuitMessage (0)
