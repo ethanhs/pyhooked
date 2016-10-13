@@ -214,7 +214,7 @@ WM_QUIT = 0x0012
 class Hook(object):
     """Main hotkey class used to and listen for hotkeys. Set an event handler to check what keys are pressed."""
 
-    def __init__(self, warn_unrecognised = True):
+    def __init__(self, warn_unrecognised = False):
         """Initializer of the Hook class, creates class attributes. If warn_unrecognised is True, warn when an unrecognised key is pressed."""
         self.warn_unrecognised = warn_unrecognised
         self.pressed_keys = []
