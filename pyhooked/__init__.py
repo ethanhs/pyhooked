@@ -8,6 +8,7 @@ from ctypes import wintypes
 from ctypes import CFUNCTYPE, POINTER, c_int, c_uint, c_void_p, windll
 from ctypes import byref
 from warnings import warn
+from traceback import format_exc
 import atexit
 
 __version__ = '0.8.1'
@@ -246,6 +247,7 @@ class Hook(object):
                 key_code = 0xFFFFFFFF & kb_data_ptr[0]  # key code
                 current_key = ID_TO_KEY.get(key_code) # check the type of event (see ID_TO_KEY for a list)
                 if current_key is None:
+                    event = None # We can check this later.
                     if self.warn_unrecognised:
                         warn('Unrecognised key ID %d.' % key_code)
                 else:
@@ -264,12 +266,15 @@ class Hook(object):
                     # wrap the keyboard information grabbed into a container class
                     event = KeyboardEvent(current_key, event_type, self.pressed_keys, key_code)
 
-                    # if we have an event handler, call it to deal with keys in the list
-                    if self.handler:
+                # Call the event handler to deal with keys in the list
+                try:
+                    if event:
                         self.handler(event)
-
-                # TODO: fix return here to use non-blocking call
-                return CallNextHookEx(self.keyboard_id, code, event_code, kb_data_ptr)
+                except Exception as e:
+                    warn('While handling {}, self.handler produced a traceback:\n{}'.format(event, format_exc()))
+                finally:
+                    # TODO: fix return here to use non-blocking call
+                    return CallNextHookEx(self.keyboard_id, code, event_code, kb_data_ptr)
 
             keyboard_pointer = _callback_pointer(keyboard_low_level_handler)
 
@@ -282,6 +287,7 @@ class Hook(object):
                 """Used to catch and deal with mouse events"""
                 current_key = MOUSE_ID_TO_KEY.get(event_code)  # check the type of event (see MOUSE_ID_TO_KEY for a list)
                 if current_key is None:
+                    event = None # We can check this later.
                     if self.warn_unrecognised:
                         warn('Unrecognised mouse ID %d.' % event_code)
                 else:
@@ -290,11 +296,14 @@ class Hook(object):
                         # the first two members of kb_data_ptr hold the mouse position, x and y
                         event = MouseEvent(current_key, event_type, kb_data_ptr[0], kb_data_ptr[1])
 
-                        if self.handler:
-                            self.handler(event)
-
-                # TODO: fix return here to use non-blocking call
-                return CallNextHookEx(self.mouse_id, code, event_code, kb_data_ptr)
+                try:
+                    if event:
+                        self.handler(event)
+                except Exception as e:
+                    warn('While handling {}, self.handler produced a traceback:\n{}'.format(event, format_exc()))
+                finally:
+                   # TODO: fix return here to use non-blocking call
+                    return CallNextHookEx(self.mouse_id, code, event_code, kb_data_ptr)
 
             mouse_pointer = _callback_pointer(mouse_low_level_handler)
             self.mouse_id = SetWindowsHookExA(WH_MOUSE_LL, mouse_pointer,
