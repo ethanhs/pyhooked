@@ -5,8 +5,10 @@ Copyright (C) 2016 Ethan Smith
 """
 import ctypes
 from ctypes import wintypes
-from ctypes import CFUNCTYPE, POINTER, c_int, c_uint, c_void_p
+from ctypes import CFUNCTYPE, POINTER, c_int, c_uint, c_void_p, windll
 from ctypes import byref
+from warnings import warn
+from traceback import format_exc
 import atexit
 
 __version__ = '0.8.1'
@@ -37,7 +39,11 @@ def _callback_pointer(handler):
     return cmp_func(handler)
 
 
-class KeyboardEvent(object):
+class BaseEvent(object):
+    """A keyboard or mouse event."""
+    pass
+
+class KeyboardEvent(BaseEvent):
     """Class to describe an event triggered by the keyboard"""
 
     def __init__(self, current_key=None, event_type=None, pressed_key=None, key_code=None):
@@ -47,7 +53,7 @@ class KeyboardEvent(object):
         self.key_code = key_code
 
 
-class MouseEvent(object):
+class MouseEvent(BaseEvent):
     """Class to describe an event triggered by the mouse"""
 
     def __init__(self, current_key=None, event_type=None, mouse_x=None, mouse_y=None):
@@ -181,6 +187,7 @@ ID_TO_KEY = {8: 'Back',
              220: 'Oem_5',
              221: 'Oem_6',
              222: 'Oem_7',
+             #223: 'OEM_8',
              1001: 'mouse left',  # mouse hotkeys
              1002: 'mouse right',
              1003: 'mouse middle',
@@ -206,17 +213,25 @@ WM_QUIT = 0x0012
 
 
 class Hook(object):
-    """"Main hotkey class used to and listen for hotkeys. Set an event handler to check what keys are pressed."""
+    """Main hotkey class used to and listen for hotkeys. Set an event handler to check what keys are pressed."""
 
-    def __init__(self):
-        """Initializer of the Hook class, creates class attributes"""
-        self.handler = None
+    def __init__(self, warn_unrecognised = False):
+        """Initializer of the Hook class, creates class attributes. If warn_unrecognised is True, warn when an unrecognised key is pressed."""
+        self.warn_unrecognised = warn_unrecognised
         self.pressed_keys = []
         self.keyboard_id = None
         self.mouse_id = None
         self.mouse_is_hook = False
         self.keyboard_is_hook = True
 
+    def handler(self, event):
+        """Handle keyboard and mouse events."""
+        raise NotImplementedError()
+    
+    def stop(self):
+        """Stop this object from listening."""
+        windll.user32.PostQuitMessage (0)
+    
     def hook(self, keyboard=True, mouse=False):
         """Hook mouse and/or keyboard events"""
         self.mouse_is_hook = mouse
@@ -229,9 +244,13 @@ class Hook(object):
         if self.keyboard_is_hook:
             def keyboard_low_level_handler(code, event_code, kb_data_ptr):
                 """Used to catch keyboard events and deal with the event"""
-                try:
-                    key_code = 0xFFFFFFFF & kb_data_ptr[0]  # key code
-                    current_key = ID_TO_KEY[key_code]
+                key_code = 0xFFFFFFFF & kb_data_ptr[0]  # key code
+                current_key = ID_TO_KEY.get(key_code) # check the type of event (see ID_TO_KEY for a list)
+                if current_key is None:
+                    event = None # We can check this later.
+                    if self.warn_unrecognised:
+                        warn('Unrecognised key ID %d.' % key_code)
+                else:
                     event_type = event_types[0xFFFFFFFF & event_code]
 
                     if event_type == 'key down':  # add key to those down to list
@@ -239,15 +258,20 @@ class Hook(object):
                             self.pressed_keys.append(current_key)
 
                     if event_type == 'key up':  # remove when no longer pressed
-                        self.pressed_keys.remove(current_key)
+                        try:
+                            self.pressed_keys.remove(current_key)
+                        except ValueError:
+                            pass # current_key is not in the list.
 
                     # wrap the keyboard information grabbed into a container class
                     event = KeyboardEvent(current_key, event_type, self.pressed_keys, key_code)
 
-                    # if we have an event handler, call it to deal with keys in the list
-                    if self.handler:
+                # Call the event handler to deal with keys in the list
+                try:
+                    if event:
                         self.handler(event)
-
+                except Exception as e:
+                    warn('While handling {}, self.handler produced a traceback:\n{}'.format(event, format_exc()))
                 finally:
                     # TODO: fix return here to use non-blocking call
                     return CallNextHookEx(self.keyboard_id, code, event_code, kb_data_ptr)
@@ -261,19 +285,24 @@ class Hook(object):
         if self.mouse_is_hook:
             def mouse_low_level_handler(code, event_code, kb_data_ptr):
                 """Used to catch and deal with mouse events"""
-                try:
-                    current_key = MOUSE_ID_TO_KEY[
-                        event_code]  # check the type of event (see MOUSE_ID_TO_KEY for a list)
+                current_key = MOUSE_ID_TO_KEY.get(event_code)  # check the type of event (see MOUSE_ID_TO_KEY for a list)
+                if current_key is None:
+                    event = None # We can check this later.
+                    if self.warn_unrecognised:
+                        warn('Unrecognised mouse ID %d.' % event_code)
+                else:
                     if current_key != 'Move':  # if we aren't moving, then we deal with a mouse click
                         event_type = MOUSE_ID_TO_EVENT_TYPE[event_code]
                         # the first two members of kb_data_ptr hold the mouse position, x and y
                         event = MouseEvent(current_key, event_type, kb_data_ptr[0], kb_data_ptr[1])
 
-                        if self.handler:
-                            self.handler(event)
-
+                try:
+                    if event:
+                        self.handler(event)
+                except Exception as e:
+                    warn('While handling {}, self.handler produced a traceback:\n{}'.format(event, format_exc()))
                 finally:
-                    # TODO: fix return here to use non-blocking call
+                   # TODO: fix return here to use non-blocking call
                     return CallNextHookEx(self.mouse_id, code, event_code, kb_data_ptr)
 
             mouse_pointer = _callback_pointer(mouse_low_level_handler)
@@ -286,13 +315,11 @@ class Hook(object):
         message = wintypes.MSG()
         while self.mouse_is_hook or self.keyboard_is_hook:
             msg = GetMessageW(byref(message), 0, 0, 0)
-            if msg == -1:
+            if msg in [0, -1]:
                 self.unhook_keyboard()
                 self.unhook_mouse()
-                exit(0)
+                break # Exit the loop.
 
-            elif msg == 0:  # GetMessage return 0 only if WM_QUIT
-                exit(0)
             else:
                 TranslateMessage(byref(message))
                 DispatchMessageW(byref(message))
