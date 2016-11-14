@@ -3,6 +3,7 @@
 
 [![Join the chat at https://gitter.im/IronManMark20/pyhooked](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/IronManMark20/pyhooked?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+###ATTENTION: New users are _highly_ recommended to use [keyboard](https://github.com/boppreh/keyboard) for new projects. This library is in maintenance mode. I will only be making bug fixes, and plan on end support entirely in the next 6-12 months.
 
 ####About - 
 PyHooked is a pure python keyboard and mouse hotkey module that allows the creation of hotkeys in all Python implementations that support sane implementations of ctypes. Instead of messing around with low level Windows calls, just give Hooked a callback and tell it to start listening.
