@@ -1,34 +1,35 @@
-#PyHooked: a pure Python hotkey module
+# PyHooked: a pure Python hotkey module
 
 
 [![Join the chat at https://gitter.im/IronManMark20/pyhooked](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/IronManMark20/pyhooked?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-###ATTENTION: New users are _highly_ recommended to use [keyboard](https://github.com/boppreh/keyboard) for new projects. This library is in maintenance mode. I will only be making bug fixes, and plan on end support entirely in the next 6-12 months.
+### ATTENTION
+New users are _highly_ recommended to use [keyboard](https://github.com/boppreh/keyboard) for new projects. This library is in maintenance mode. I will only be making bug fixes, and plan on end support entirely in the next 6-12 months.
 
-####About - 
+#### About
 PyHooked is a pure python keyboard and mouse hotkey module that allows the creation of hotkeys in all Python implementations that support sane implementations of ctypes. Instead of messing around with low level Windows calls, just give Hooked a callback and tell it to start listening.
 
 PyHooked supports IronPython (2.7.5+, incl. 2.7.6 RC2), PyPy (5.3.1+) and CPython (Tested:2.7 x86,3.4 x64,3.5 x86; Most are likely to work) currently. It is pure Python, so porting to other Python implementations and versions should be very simple.
 
-####Usage - 
+#### Usage
 Please see [example.py](https://github.com/ethanhs/pyhooked/blob/master/example.py) for a basic example.
 
 If you are using it with a UI library, please see [example_gui.py](https://github.com/ethanhs/pyhooked/blob/master/example_gui.py)
 
 Please note that the wiki is out of date, and needs to be updated.
 
-####Installing
+#### Installing
 
 Just run `$ pip install pyhooked` or
 `$ pip install git+https://github.com/ethanhs/pyhooked.git` to get the latest version.
 
 
-####Alternatives -
+#### Alternatives
 [pyHook](http://sourceforge.net/projects/pyhook/) and [pyhk](https://github.com/schurpf/pyhk) inspired the creation of this project. They are great hotkey modules too!
 
 [pywinauto](https://github.com/pywinauto/pywinauto) is an incredibly useful Windows automation library that also includes among a plethora of tools, a hotkey detection library.
 
-####License - 
+#### License
 PyHooked  Copyright (C) 2015  Ethan Smith
 This program comes with ABSOLUTELY NO WARRANTY;
 This is free software, and you are welcome to redistribute it
@@ -73,9 +74,9 @@ Pyhooked v0.8+ is based on work by Maxim Samokhvalov, who has my graditude for h
 
 
 
-#####As of v0.6, the module is LGPL licensed, not under the GPL.
+##### As of v0.6, the module is LGPL licensed, not under the GPL.
 
-####The Future - 
+#### The Future
 Here are a few things that I would like to see:
 * ~~add support for args for called functions~~  __(DONE)__
 * ~~get mouse inputs~~  __(DONE)__
